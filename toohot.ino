@@ -155,7 +155,7 @@ void sendData() {
 
     //Send data
     Serial.print("Sending ");
-    String PostData="{\"temp\":" + String(temp) + ",\"sensorID\":1}"; 
+    String PostData="{\"temp\":" + String(temp + 0.12*dist) + ",\"sensorID\":1}"; 
     Serial.println(PostData);
     client.println("POST /api/temps HTTP/1.1");
     client.println("Host: 54.208.8.50");
