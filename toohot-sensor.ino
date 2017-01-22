@@ -186,7 +186,7 @@ void sendData() {
   
     // Disconnect
     client.stop();
-    delay(3000);
+    //delay(3000);
 }
 
 void setup() {
@@ -211,6 +211,7 @@ void loop() {
   updateRangeFinder();
   temp_output();
   dist_output();
+  if(dist < 7) return;
   //if(sent && dist > 55) sent = false;
   if(!sent && dist <= 55){ 
     sent = true;
