@@ -186,6 +186,7 @@ void sendData() {
   
     // Disconnect
     client.stop();
+    delay(3000);
 }
 
 void setup() {
@@ -219,7 +220,7 @@ void loop() {
   else if(sent) {
     n++;
     if((temp + 0.12*dist) > qtemp && dist <= 55) qtemp = (temp + 0.12*dist);
-    if(n == 3) {
+    if(n == 10) {
       sent = false;
       sendData();
     }
