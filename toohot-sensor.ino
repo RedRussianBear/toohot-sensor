@@ -26,12 +26,14 @@ unsigned long last_time = 0;
 
 //Processed sensor vars
 float temp= 99.00;
+float qtemp;
 float ambient;
 long dist;
 boolean light = false;
 boolean sent = false;
 
 int irSetup = 1;
+int n = 0;
 
 float latestReading = 0.0;
 
@@ -145,7 +147,6 @@ float getFreshAmb() {
 }
 
 void sendData() {
-    sent = true;
     //Establish connection
     while(!client.connected()){
       client.stop();
@@ -155,7 +156,7 @@ void sendData() {
 
     //Send data
     Serial.print("Sending ");
-    String PostData="{\"temp\":" + String(temp + 0.12*dist) + ",\"sensorID\":1}"; 
+    String PostData="{\"temp\":" + String(qtemp + 0.12*dist) + ",\"sensorID\":1}"; 
     Serial.println(PostData);
     client.println("POST /api/temps HTTP/1.1");
     client.println("Host: 54.208.8.50");
@@ -209,8 +210,20 @@ void loop() {
   updateRangeFinder();
   temp_output();
   dist_output();
-  if(sent && dist > 20) sent = false;
-  if(!sent && dist < 20) sendData();
+  if(sent && dist > 55) sent = false;
+  if(!sent && dist <= 55){ 
+    sent = true;
+    n = 0;
+    qtemp = 0;
+  }
+  else if(sent) {
+    n++;
+    if(temp > qtemp) qtemp = temp;
+    if(n == 3) {
+      sent = false;
+      sendData();
+    }
+  }
   delay(100);
 }
 
