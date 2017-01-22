@@ -11,8 +11,8 @@
 WiFiClient client;
 
 //Wireless hotspot connection details
-char ssid[] = "toohot"; 
-char pass[] = "jdusumsjrnlvy";
+char ssid[] = "Ji Hyuk's iPhone"; 
+char pass[] = "mxpd867!";
 int status = WL_IDLE_STATUS;
 
 //IRT deserializer vars
@@ -156,7 +156,7 @@ void sendData() {
 
     //Send data
     Serial.print("Sending ");
-    String PostData="{\"temp\":" + String(qtemp + 0.12*dist) + ",\"sensorID\":1}"; 
+    String PostData="{\"temp\":" + String(qtemp) + ",\"sensorID\":1}"; 
     Serial.println(PostData);
     client.println("POST /api/temps HTTP/1.1");
     client.println("Host: 54.208.8.50");
@@ -210,15 +210,15 @@ void loop() {
   updateRangeFinder();
   temp_output();
   dist_output();
-  if(sent && dist > 55) sent = false;
+  //if(sent && dist > 55) sent = false;
   if(!sent && dist <= 55){ 
     sent = true;
     n = 0;
-    qtemp = 0;
+    qtemp = (temp + 0.12*dist);
   }
   else if(sent) {
     n++;
-    if(temp > qtemp) qtemp = temp;
+    if((temp + 0.12*dist) > qtemp && dist <= 55) qtemp = (temp + 0.12*dist);
     if(n == 3) {
       sent = false;
       sendData();
